@@ -1,0 +1,141 @@
+<div class="section-body">
+
+  <mat-toolbar color="primary">
+    <span>CRUD Operation In Angular 15</span>
+    <span class="example-spacer"></span>
+    <button mat-raised-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      ADD Member
+    </button>
+  </mat-toolbar>
+  <div class="container-fluid">
+    <div class="row mt-3">
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-header">
+            <h3>Add Member Details</h3>
+          </div>
+          <div class="card-body">
+            <form class="example-form">
+              <div class="row">
+                
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>First Name</mat-label>
+                    <input matInput placeholder="Your Name" value="Sushi" [(ngModel)]="userList.name" ngDefaultControl [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Last Name</mat-label>
+                    <input matInput placeholder="Your Surname" value="Patel"  [(ngModel)]="userList.lastname" ngDefaultControl [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Email</mat-label>
+                    <input type="email" [(ngModel)]="userList.email" ngDefaultControl matInput [formControl]="emailFormControl" [errorStateMatcher]="matcher"  
+                      placeholder="Ex. pat@example.com">
+                    <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+                      Please enter a valid email address
+                    </mat-error>
+                    <mat-error *ngIf="emailFormControl.hasError('required')">
+                      Email is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-radio-group aria-label="Select an option">
+                    <mat-label>Gender:</mat-label>
+                    <mat-radio-button value="male" class="radiobuttons"  [(ngModel)]="userList.gender" ngDefaultControl [ngModelOptions]="{standalone: true}">Male</mat-radio-button>
+                    <mat-radio-button value="female" class="radiobuttons"  [(ngModel)]="userList.gender" ngDefaultControl [ngModelOptions]="{standalone: true}">Female</mat-radio-button>
+                    <mat-radio-button value="other" class="radiobuttons"  [(ngModel)]="userList.gender" ngDefaultControl [ngModelOptions]="{standalone: true}">Other</mat-radio-button>
+                  </mat-radio-group>
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Phone Number</mat-label>
+                    <input matInput type="number" placeholder="Your Number"  [(ngModel)]="userList.number" ngDefaultControl [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Address</mat-label>
+                    <textarea matInput  placeholder="Please Start From here" value="Patel"  [(ngModel)]="userList.address" ngDefaultControl [ngModelOptions]="{standalone: true}"></textarea>
+                  </mat-form-field>
+               
+              </div>
+            </form>
+          </div>
+          <div class="card-footer">
+            <button mat-raised-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon" (click)="resetUser()">
+              Reset
+            </button>
+            <span flex></span>
+            <button mat-raised-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon" style="float: right;" (click)="saveUser()" *ngIf="userList.id == 0">
+              Save
+            </button>
+            <button mat-raised-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon" style="float: right;" (click)="updateUser()" *ngIf="userList.id !== 0">
+              Update
+            </button>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-header">
+            <h3>Member Details List</h3>
+          </div>
+          <div class="card-body">
+            <table class="table table-striped table-centered" [dataSource]="datasources" mat-table  mat-Sort matSortActive="title" matSortStart="asc">
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>Action</th>
+                <td mat-footer-cell *matCellDef="let element">
+                  <div class="example-button-row">
+                    <button mat-raised-button>
+                      <mat-icon (click)="edit(element)" style="cursor: pointer;">create</mat-icon>
+                    </button>
+                    <!-- <div class="div" *ngIf="element.status == false"></div>
+                    <div class="div" *ngIf="element.status == true"></div> -->
+                    <button mat-raised-button>
+
+                      <mat-icon (click)="delete(element.id)" style="cursor: pointer;">delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
+                  <div>Name</div>
+                  <div><input type="search" #input></div>
+                </th>
+                <td mat-cell *matCellDef="let element" class="tempstyle">{{element.name}}</td>
+              </ng-container>
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by email">
+                  <div>Email</div>
+                  <div><input type="search" #input></div>
+                </th>
+                <td mat-cell *matCellDef="let element" class="tempstyle">{{element.email}}</td>
+              </ng-container>
+              <ng-container matColumnDef="number">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
+                  <div>Mobile Number</div>
+                  <div><input type="search" #input></div>
+                </th>
+                <td mat-cell *matCellDef="let element" class="tempstyle">{{element.number}}</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayColumn"></tr>
+              <tr mat-row *matRowDef="let row; columns:displayColumn"></tr>
+            </table>
+            <!-- <table>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Number</th>
+                <th>Actions</th>
+              </tr>
+              <tr *ngFor="let lists of userlists">
+                <td>{{lists.name}}</td>
+                <td>{{lists.email}}</td>
+                <td>{{lists.number}}</td>
+                <td> <mat-icon (click)="delete(lists.id)" style="cursor: pointer;">delete</mat-icon></td>
+                <td> <mat-icon (click)="edit(lists)" style="cursor: pointer;">edit</mat-icon></td>
+              </tr>
+            </table> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>

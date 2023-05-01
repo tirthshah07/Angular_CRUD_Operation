@@ -1,0 +1,9 @@
+.example-spacer {
+    flex: 1 1 auto;
+  }
+  .example-full-width{
+    padding: 10px;
+  }
+  .radiobuttons{
+    padding: 8px;
+  }
